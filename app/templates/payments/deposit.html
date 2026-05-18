@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block content %}
+<div class="max-w-md mx-auto bg-ink-800 rounded-2xl p-6 border border-white/5">
+<h1 class="text-2xl font-bold mb-2">Deposit money</h1>
+<p class="text-sm text-slate-400 mb-4">Add funds to your main wallet. Minimum ₹{{ min_amount }}.</p>
+<form method="post" class="space-y-3">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<input name="amount" type="number" min="{{ min_amount }}" placeholder="Amount in ₹" class="w-full px-3 py-2 rounded-lg bg-ink-700 border border-white/10" required>
+<div class="flex gap-2">
+{% for q in [100,500,1000,2000] %}
+<button type="button" onclick="this.form.amount.value={{q}}" class="px-3 py-1 rounded bg-ink-700 text-sm">₹{{q}}</button>
+{% endfor %}
+</div>
+<button class="w-full py-2 rounded-lg bg-accent-400 text-ink-900 font-semibold">Continue</button>
+</form>
+<a href="{{ url_for('payments.history') }}" class="block text-center text-sm text-slate-400 mt-3">Payment history</a>
+</div>{% endblock %}

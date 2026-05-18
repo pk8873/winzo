@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block content %}
+<div class="bg-ink-800 rounded-2xl p-6 border border-white/5">
+  <h1 class="text-2xl font-bold mb-2">Refer & Earn</h1>
+  <p class="text-sm text-slate-400">Share your code and earn ₹50 per verified friend.</p>
+  <div class="mt-4 p-3 bg-ink-700 rounded-lg text-center font-mono text-xl tracking-widest">{{ code }}</div>
+  <a href="{{ url_for('referrals.claim') }}" class="inline-block mt-3 px-4 py-2 rounded-lg bg-brand-500 font-semibold">Claim pending bonuses</a>
+</div>
+<h3 class="mt-6 font-bold">Your referrals</h3>
+<ul class="mt-2 divide-y divide-white/5 text-sm">
+{% for u, paid in refs %}<li class="py-2 flex justify-between"><span>{{ u.name or u.mobile }}</span>
+<span class="text-emerald-400">₹{{ paid }}</span></li>
+{% else %}<li class="text-slate-500 py-2">No referrals yet.</li>{% endfor %}
+</ul>{% endblock %}

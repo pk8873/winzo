@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block content %}
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-2xl font-bold">Admin · Dashboard</h1>
+  <div class="text-sm text-slate-400">Role: <b>{{ current_user.role }}</b></div>
+</div>
+<div class="flex flex-wrap gap-2 mb-4 text-sm">
+{% for label, ep in [('Users','admin.users'),('Deposits','admin.deposits'),('Withdrawals','admin.withdrawals'),
+  ('Games','admin.games'),('Fraud','admin.fraud'),('Logs','admin.logs'),('Broadcast','admin.broadcast'),('Analytics','admin.analytics')] %}
+<a href="{{ url_for(ep) }}" class="px-3 py-1.5 rounded-lg bg-ink-800 border border-white/5 hover:border-brand-500">{{ label }}</a>
+{% endfor %}
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+{% for k, v in stats.items() %}
+<div class="bg-ink-800 border border-white/5 rounded-2xl p-4">
+  <div class="text-xs text-slate-400 capitalize">{{ k.replace('_',' ') }}</div>
+  <div class="text-2xl font-bold">{{ v }}</div>
+</div>{% endfor %}
+</div>{% endblock %}

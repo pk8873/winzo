@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% block content %}
+<div class="max-w-md mx-auto bg-ink-800 rounded-2xl p-6 border border-white/5 text-center">
+<h1 class="text-xl font-bold mb-3">Complete payment</h1>
+<p class="text-sm text-slate-400">Amount: <b>₹{{ deposit.amount }}</b></p>
+<button id="pay" class="mt-4 px-6 py-3 rounded-xl bg-accent-400 text-ink-900 font-bold">Pay with Razorpay</button>
+</div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById('pay').onclick = () => {
+  const rzp = new Razorpay({
+    key: '{{ key_id }}', amount: {{ order.amount }}, currency: 'INR',
+    name: 'AceArena', order_id: '{{ order.id }}',
+    handler: async (resp) => {
+      const r = await fetch('{{ url_for("payments.verify") }}', {
+        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(resp)
+      });
+      const j = await r.json(); if(j.ok) location.href = j.redirect; else alert('Verification failed');
+    }
+  }); rzp.open();
+};
+</script>
+{% endblock %}

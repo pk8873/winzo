@@ -1,0 +1,3 @@
+/* Minimal extras; rest is Tailwind via CDN */
+.tabular { font-variant-numeric: tabular-nums; }
+.no-scrollbar::-webkit-scrollbar{display:none}

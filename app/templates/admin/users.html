@@ -1,0 +1,30 @@
+{% extends "base.html" %}{% block content %}
+<h1 class="text-2xl font-bold mb-3">Users</h1>
+<form class="mb-3"><input name="q" value="{{ q }}" placeholder="Search name/email/mobile"
+  class="px-3 py-2 rounded-lg bg-ink-700 border border-white/10"></form>
+<div class="rounded-2xl bg-ink-800 border border-white/5 overflow-x-auto"><table class="w-full text-sm">
+<thead class="bg-ink-700"><tr><th class="p-2 text-left">ID</th><th class="p-2 text-left">Name</th><th class="p-2">Mobile</th><th class="p-2">Email</th><th class="p-2">Role</th><th class="p-2">Balance</th><th class="p-2">Status</th><th class="p-2">Actions</th></tr></thead>
+<tbody class="divide-y divide-white/5">
+{% for u in rows %}<tr>
+<td class="p-2">{{ u.id }}</td><td class="p-2">{{ u.name }}</td>
+<td class="p-2">{{ u.mobile }}</td><td class="p-2">{{ u.email }}</td>
+<td class="p-2">{{ u.role }}</td>
+<td class="p-2 font-mono">₹{{ '%.2f'|format(balances[u.id]) }}</td>
+<td class="p-2">{% if u.is_blocked %}<span class="text-rose-400">blocked</span>{% else %}<span class="text-emerald-400">active</span>{% endif %}</td>
+<td class="p-2 whitespace-nowrap">
+  <form method="post" action="{{ url_for('admin.block_user', uid=u.id) }}" class="inline">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button class="px-2 py-1 rounded bg-ink-700 text-xs">{{ 'Unblock' if u.is_blocked else 'Block' }}</button>
+  </form>
+  <details class="inline-block ml-2"><summary class="text-xs cursor-pointer text-brand-500">Adjust</summary>
+    <form method="post" action="{{ url_for('admin.adjust_wallet', uid=u.id) }}" class="mt-2 flex gap-1">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input name="amount" placeholder="±amt" class="w-20 px-2 py-1 rounded bg-ink-700 border border-white/10 text-xs">
+      <select name="wallet_type" class="px-2 py-1 rounded bg-ink-700 border border-white/10 text-xs">
+        <option value="main">main</option><option value="winning">winning</option><option value="bonus">bonus</option></select>
+      <input name="note" placeholder="note" class="w-24 px-2 py-1 rounded bg-ink-700 border border-white/10 text-xs">
+      <button class="px-2 py-1 bg-brand-500 rounded text-xs">Go</button>
+    </form>
+  </details>
+</td></tr>{% endfor %}
+</tbody></table></div>{% endblock %}

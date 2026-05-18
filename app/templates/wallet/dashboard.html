@@ -1,0 +1,49 @@
+{% extends "base.html" %}{% block content %}
+<div class="grid md:grid-cols-3 gap-4">
+  <div class="md:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div class="rounded-2xl bg-gradient-to-br from-brand-600 to-brand-500 p-5">
+      <div class="text-sm opacity-80">Total Balance</div>
+      <div class="text-3xl font-extrabold">₹{{ '%.2f'|format(total) }}</div>
+    </div>
+    <div class="rounded-2xl bg-ink-800 p-5 border border-white/5"><div class="text-xs text-slate-400">Main</div><div class="text-xl font-bold">₹{{ '%.2f'|format(main) }}</div></div>
+    <div class="rounded-2xl bg-ink-800 p-5 border border-white/5"><div class="text-xs text-slate-400">Winnings</div><div class="text-xl font-bold">₹{{ '%.2f'|format(winning) }}</div></div>
+    <div class="rounded-2xl bg-ink-800 p-5 border border-white/5"><div class="text-xs text-slate-400">Bonus</div><div class="text-xl font-bold">₹{{ '%.2f'|format(bonus) }}</div></div>
+  </div>
+
+  <div class="flex gap-3 md:col-span-3">
+    <a href="{{ url_for('payments.deposit') }}" class="flex-1 text-center py-3 rounded-xl bg-accent-400 text-ink-900 font-semibold">Deposit</a>
+    <a href="{{ url_for('withdraw.request_withdraw') }}" class="flex-1 text-center py-3 rounded-xl bg-ink-800 border border-white/10">Withdraw</a>
+    <a href="{{ url_for('games.lobby') }}" class="flex-1 text-center py-3 rounded-xl bg-brand-500 font-semibold">Play</a>
+  </div>
+
+  <div class="rounded-2xl bg-ink-800 p-4 border border-white/5">
+    <h3 class="font-bold mb-2">Recent transactions</h3>
+    <ul class="divide-y divide-white/5 text-sm">
+      {% for t in recent_tx %}
+      <li class="flex justify-between py-2">
+        <span class="capitalize text-slate-400">{{ t.tx_type.replace('_',' ') }} · {{ t.wallet_type }}</span>
+        <span class="{{ 'text-emerald-400' if t.amount > 0 else 'text-rose-400' }} font-mono">₹{{ '%.2f'|format(t.amount) }}</span>
+      </li>{% else %}<li class="text-slate-500 py-2">No activity yet.</li>{% endfor %}
+    </ul>
+    <a href="{{ url_for('wallet.history') }}" class="text-xs text-brand-500 mt-2 inline-block">View all →</a>
+  </div>
+
+  <div class="rounded-2xl bg-ink-800 p-4 border border-white/5">
+    <h3 class="font-bold mb-2">Last predictions</h3>
+    <ul class="text-sm space-y-1">
+    {% for e in recent_entries %}
+      <li class="flex justify-between"><span class="text-slate-400">{{ e.pick_type }} → {{ e.pick_value }}</span>
+        <span class="{{ 'text-emerald-400' if e.is_win else 'text-rose-400' }}">{{ 'WIN ₹%.2f'|format(e.payout) if e.is_win else 'LOSS' }}</span></li>
+    {% else %}<li class="text-slate-500">—</li>{% endfor %}
+    </ul>
+  </div>
+
+  <div class="rounded-2xl bg-ink-800 p-4 border border-white/5">
+    <h3 class="font-bold mb-2">Notifications</h3>
+    <ul class="text-sm space-y-2">
+      {% for n in notifs %}<li><div class="font-semibold">{{ n.title }}</div><div class="text-slate-400">{{ n.body }}</div></li>
+      {% else %}<li class="text-slate-500">No notifications.</li>{% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

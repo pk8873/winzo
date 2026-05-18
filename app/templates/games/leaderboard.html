@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block content %}
+<h1 class="text-2xl font-bold mb-4">Leaderboard · Top winners</h1>
+<div class="rounded-2xl bg-ink-800 border border-white/5 overflow-hidden">
+<table class="w-full text-sm"><thead class="bg-ink-700"><tr><th class="p-3 text-left">#</th><th class="p-3 text-left">Player</th><th class="p-3 text-right">Total winnings</th></tr></thead>
+<tbody class="divide-y divide-white/5">
+{% for u, total in rows %}<tr><td class="p-3">{{ loop.index }}</td><td class="p-3">{{ u.name or u.mobile }}</td>
+<td class="p-3 text-right font-mono text-emerald-400">₹{{ '%.2f'|format(total or 0) }}</td></tr>{% endfor %}
+</tbody></table></div>{% endblock %}

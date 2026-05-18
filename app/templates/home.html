@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="text-center py-12">
+  <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight">
+    Predict. Play. <span class="text-brand-500">Win Real.</span>
+  </h1>
+  <p class="mt-4 text-slate-300 max-w-xl mx-auto">
+    AceArena is a fast, fair, real-money prediction & card gaming platform.
+    Instant withdrawals, provably-random RNG, and full transparency.
+  </p>
+  <div class="mt-8 flex justify-center gap-3">
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('games.lobby') }}" class="px-6 py-3 rounded-xl bg-brand-500 font-semibold">Play now</a>
+    {% else %}
+      <a href="{{ url_for('auth.register') }}" class="px-6 py-3 rounded-xl bg-brand-500 font-semibold">Get ₹50 sign-up</a>
+      <a href="{{ url_for('auth.login') }}" class="px-6 py-3 rounded-xl border border-white/10">Login</a>
+    {% endif %}
+  </div>
+</section>
+<section class="grid md:grid-cols-3 gap-4 mt-10">
+  {% for t, d, e in [
+    ('Color Prediction','Red, Green or Violet — 60s rounds','🟣'),
+    ('Card Games','Red/Black, Suit, Higher/Lower','🃏'),
+    ('Flash Cards','Lightning 30s rounds','⚡')
+  ] %}
+  <div class="rounded-2xl bg-ink-800 border border-white/5 p-5">
+    <div class="text-3xl">{{ e }}</div>
+    <h3 class="mt-2 font-bold">{{ t }}</h3>
+    <p class="text-slate-400 text-sm mt-1">{{ d }}</p>
+  </div>
+  {% endfor %}
+</section>
+{% endblock %}

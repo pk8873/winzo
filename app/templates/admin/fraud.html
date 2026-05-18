@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block content %}
+<h1 class="text-2xl font-bold mb-3">Fraud flags</h1>
+<div class="rounded-2xl bg-ink-800 border border-white/5 overflow-x-auto"><table class="w-full text-sm">
+<thead class="bg-ink-700"><tr><th class="p-2">ID</th><th class="p-2">User</th><th class="p-2">Rule</th><th class="p-2">Severity</th><th class="p-2">Detail</th><th class="p-2">Status</th><th class="p-2"></th></tr></thead>
+<tbody class="divide-y divide-white/5">{% for f in rows %}<tr>
+<td class="p-2">{{ f.id }}</td><td class="p-2">{{ f.user_id }}</td>
+<td class="p-2">{{ f.rule }}</td>
+<td class="p-2"><span class="px-2 rounded text-xs
+  {{ 'bg-rose-500/20 text-rose-300' if f.severity=='high' else 'bg-amber-500/20 text-amber-300' if f.severity=='medium' else 'bg-sky-500/20 text-sky-300' }}">{{ f.severity }}</span></td>
+<td class="p-2 text-slate-400">{{ f.detail }}</td>
+<td class="p-2">{{ 'resolved' if f.resolved else 'open' }}</td>
+<td class="p-2">{% if not f.resolved %}<form method="post" action="{{ url_for('admin.resolve_fraud', fid=f.id) }}">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="text-xs px-2 py-1 bg-brand-500 rounded">Resolve</button></form>{% endif %}</td>
+</tr>{% endfor %}</tbody></table></div>{% endblock %}

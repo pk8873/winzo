@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block content %}
+<h1 class="text-2xl font-bold mb-4">Withdrawal history</h1>
+<div class="rounded-2xl bg-ink-800 border border-white/5 overflow-hidden">
+<table class="w-full text-sm"><thead class="bg-ink-700"><tr><th class="p-3 text-left">Date</th><th class="p-3">Amount</th><th class="p-3">Method</th><th class="p-3">Status</th><th class="p-3">Note</th></tr></thead>
+<tbody class="divide-y divide-white/5">{% for w in rows %}<tr>
+<td class="p-3">{{ w.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+<td class="p-3 font-mono">₹{{ w.amount }}</td>
+<td class="p-3 uppercase">{{ w.method }}</td>
+<td class="p-3"><span class="px-2 py-0.5 rounded-full text-xs
+  {{ 'bg-emerald-500/20 text-emerald-300' if w.status=='paid' else 'bg-amber-500/20 text-amber-300' if w.status=='pending' else 'bg-rose-500/20 text-rose-300' }}">{{ w.status }}</span></td>
+<td class="p-3 text-slate-500">{{ w.admin_note or '' }}</td>
+</tr>{% endfor %}</tbody></table></div>{% endblock %}

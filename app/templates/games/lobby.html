@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block content %}
+<h1 class="text-2xl font-bold mb-4">Game Lobby</h1>
+<div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4">
+{% for g in games %}
+<a href="{{ url_for('prediction.play', code=g.code) if g.category in ('prediction','flash') else url_for('cards.play', code=g.code) }}"
+   class="rounded-2xl bg-gradient-to-br from-ink-800 to-ink-700 border border-white/5 p-5 hover:border-brand-500 transition">
+  <div class="text-xs uppercase text-accent-400">{{ g.category }}</div>
+  <div class="text-lg font-bold">{{ g.name }}</div>
+  <p class="text-sm text-slate-400 mt-1">{{ g.description }}</p>
+  <div class="text-xs text-slate-500 mt-3">Entry ₹{{ g.min_entry }} – ₹{{ g.max_entry }} · RTP {{ '%.0f'|format((g.rtp or 0.9)*100) }}%</div>
+</a>{% endfor %}
+</div>{% endblock %}

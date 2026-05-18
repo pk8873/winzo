@@ -1,0 +1,63 @@
+{% extends "base.html" %}{% block content %}
+<div class="grid md:grid-cols-3 gap-4">
+<div class="md:col-span-2 rounded-2xl bg-ink-800 border border-white/5 p-5">
+  <h1 class="text-xl font-bold">{{ game.name }}</h1>
+  <p class="text-sm text-slate-400">{{ game.description }}</p>
+
+  {% if last %}
+  <div class="my-6 text-center">
+    <div class="text-xs text-slate-400">Last draw</div>
+    <div class="text-7xl font-bold {{ 'text-rose-400' if last.drawn_card[1] in ('H','D') else 'text-slate-100' }}">
+      {{ last.drawn_card[0] }}{{ suits[last.drawn_card[1]] }}
+    </div>
+    <div class="mt-2 text-sm {{ 'text-emerald-400' if last.is_win else 'text-rose-400' }}">
+      {{ 'WIN ₹%.2f'|format(last.payout) if last.is_win else 'No luck' }}
+    </div>
+  </div>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('cards.draw', code=game.code) }}" class="space-y-4">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+  {% if game.code == 'card_rb' %}
+    <input type="hidden" name="bet_type" value="red_black">
+    <div class="grid grid-cols-2 gap-3">
+      <button name="choice" value="red" class="py-4 rounded-xl bg-rose-500 font-bold">RED 2x</button>
+      <button name="choice" value="black" class="py-4 rounded-xl bg-slate-800 border border-white/10 font-bold">BLACK 2x</button>
+    </div>
+  {% elif game.code == 'card_suit' %}
+    <input type="hidden" name="bet_type" value="suit">
+    <div class="grid grid-cols-4 gap-3 text-2xl">
+      <button name="choice" value="S" class="py-4 rounded-xl bg-ink-700">♠</button>
+      <button name="choice" value="H" class="py-4 rounded-xl bg-rose-500/20 text-rose-300">♥</button>
+      <button name="choice" value="D" class="py-4 rounded-xl bg-rose-500/20 text-rose-300">♦</button>
+      <button name="choice" value="C" class="py-4 rounded-xl bg-ink-700">♣</button>
+    </div>
+  {% elif game.code == 'card_hl' %}
+    <input type="hidden" name="bet_type" value="higher_lower">
+    <div class="grid grid-cols-2 gap-3">
+      <button name="choice" value="higher" class="py-4 rounded-xl bg-emerald-500 font-bold">HIGHER 2x</button>
+      <button name="choice" value="lower" class="py-4 rounded-xl bg-amber-500 font-bold text-ink-900">LOWER 2x</button>
+    </div>
+  {% endif %}
+
+  <div class="flex gap-2 items-center">
+    <span class="text-sm text-slate-400">Amount</span>
+    <input name="amount" type="number" min="{{ game.min_entry }}" max="{{ game.max_entry }}" value="{{ game.min_entry }}"
+           class="px-3 py-2 rounded-lg bg-ink-700 border border-white/10 w-32">
+    <span class="ml-auto text-sm text-slate-400">Balance: ₹{{ '%.2f'|format(balance) }}</span>
+  </div>
+  </form>
+</div>
+
+<div class="rounded-2xl bg-ink-800 border border-white/5 p-4">
+  <h3 class="font-bold mb-2">Your recent rounds</h3>
+  <ul class="text-sm divide-y divide-white/5">
+  {% for h in history %}<li class="py-1 flex justify-between">
+    <span>{{ h.drawn_card[0] }}{{ suits[h.drawn_card[1]] }}</span>
+    <span class="{{ 'text-emerald-400' if h.is_win else 'text-rose-400' }}">
+      {{ 'WIN ₹%.2f'|format(h.payout) if h.is_win else 'LOSS' }}
+    </span></li>{% endfor %}
+  </ul>
+</div>
+</div>{% endblock %}

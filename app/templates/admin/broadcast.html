@@ -1,0 +1,8 @@
+{% extends "base.html" %}{% block content %}
+<h1 class="text-2xl font-bold mb-3">Broadcast notification</h1>
+<form method="post" class="max-w-lg space-y-3 bg-ink-800 rounded-2xl p-5 border border-white/5">
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<input name="title" placeholder="Title" required class="w-full px-3 py-2 rounded-lg bg-ink-700 border border-white/10">
+<textarea name="body" rows="4" placeholder="Message" required class="w-full px-3 py-2 rounded-lg bg-ink-700 border border-white/10"></textarea>
+<button class="px-4 py-2 rounded-lg bg-brand-500 font-semibold">Send</button>
+</form>{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}{% block content %}
+<h1 class="text-2xl font-bold mb-4">Transaction history</h1>
+<div class="rounded-2xl bg-ink-800 border border-white/5 overflow-hidden">
+<table class="w-full text-sm">
+<thead class="bg-ink-700 text-slate-300"><tr><th class="p-3 text-left">Date</th><th class="p-3 text-left">Type</th><th class="p-3 text-left">Wallet</th><th class="p-3 text-right">Amount</th><th class="p-3 text-left">Ref</th></tr></thead>
+<tbody class="divide-y divide-white/5">
+{% for t in tx %}<tr>
+<td class="p-3">{{ t.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+<td class="p-3 capitalize">{{ t.tx_type.replace('_',' ') }}</td>
+<td class="p-3">{{ t.wallet_type }}</td>
+<td class="p-3 text-right font-mono {{ 'text-emerald-400' if t.amount>0 else 'text-rose-400' }}">₹{{ '%.2f'|format(t.amount) }}</td>
+<td class="p-3 text-slate-500">{{ t.reference or '' }}</td>
+</tr>{% endfor %}
+</tbody></table></div>{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}{% block content %}
+<h1 class="text-2xl font-bold mb-3">Withdrawals</h1>
+<div class="flex gap-2 text-sm mb-3">
+{% for s in ['pending','paid','rejected'] %}
+<a href="?status={{ s }}" class="px-3 py-1 rounded-lg {{ 'bg-brand-500' if status==s else 'bg-ink-800' }}">{{ s }}</a>
+{% endfor %}
+</div>
+<div class="rounded-2xl bg-ink-800 border border-white/5 overflow-x-auto"><table class="w-full text-sm">
+<thead class="bg-ink-700"><tr><th class="p-2">ID</th><th class="p-2">User</th><th class="p-2">Amount</th><th class="p-2">Method</th><th class="p-2">Details</th><th class="p-2">Actions</th></tr></thead>
+<tbody class="divide-y divide-white/5">
+{% for w in rows %}<tr>
+<td class="p-2">{{ w.id }}</td><td class="p-2">{{ w.user_id }}</td>
+<td class="p-2 font-mono">₹{{ w.amount }}</td><td class="p-2 uppercase">{{ w.method }}</td>
+<td class="p-2 text-xs text-slate-400">{{ w.upi_id or (w.account_holder ~ ' / ' ~ w.bank_account ~ ' / ' ~ w.ifsc) }}</td>
+<td class="p-2">
+  {% if w.status=='pending' %}
+  <form method="post" action="{{ url_for('admin.decide_withdraw', wid=w.id) }}" class="flex gap-1">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input name="note" placeholder="note" class="w-28 px-2 py-1 rounded bg-ink-700 border border-white/10 text-xs">
+    <button name="decision" value="approve" class="px-2 py-1 bg-emerald-500 rounded text-xs">Pay</button>
+    <button name="decision" value="reject" class="px-2 py-1 bg-rose-500 rounded text-xs">Reject</button>
+  </form>
+  {% else %}<span class="text-xs text-slate-500">{{ w.admin_note or '—' }}</span>{% endif %}
+</td></tr>{% endfor %}
+</tbody></table></div>{% endblock %}
