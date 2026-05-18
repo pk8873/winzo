@@ -1,6 +1,6 @@
 """
 Entry point for the Real-Money Prediction & Card Gaming Platform.
-Run locally:  python app.py
+Run locally:  python run.py
 """
 
 import os
